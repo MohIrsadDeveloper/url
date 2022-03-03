@@ -14,13 +14,19 @@ const register = async (req, res) => {
         phone: req.body.phone,
         role: req.body.role ? req.body.role : "User"
     }
-    const final = await UserModel.create(userdata)
-        .then(data => {
-            res.status(200).send("Registration Successfully")
-        })
-        .catch(err => {
-            res.status(500).send("Error While Registration")
-        })
+    const userfind = await UserModel.findOne({email : req.body.email})
+    if (!userfind) {
+        const final = await UserModel.create(userdata)
+            .then(data => {
+                res.status(200).send("Registration Successfully")
+            })
+            .catch(err => {
+                res.status(500).send("Error While Registration")
+            })   
+    }
+    else {
+        res.send("User Already Exist")
+    }
 }
 
 const login = (req, res) => {
