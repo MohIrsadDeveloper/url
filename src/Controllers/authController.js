@@ -59,7 +59,7 @@ const userInfo = (req,res) => {
                 res.status(200).json({auth : false, token : "Invalid Token"})
             }
             else {
-                UserModel.find(user.id, (err,result) => {
+                UserModel.findById(user.id, (err,result) => {
                     res.json(result)
                 })
             }
