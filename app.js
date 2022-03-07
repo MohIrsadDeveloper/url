@@ -6,6 +6,9 @@ const bodyParser = require("body-parser");
 const cors = require('cors');
 const router = require("./src/Routes/router");
 const mongoose = require("mongoose")
+const checksum_lib = require('./Paytm/checksum')
+const config = require("./paytm/config")
+const path = require("path");
 
 
 const MongoClient = mongo.MongoClient;
@@ -33,9 +36,7 @@ app.use(cors());
 app.use('/', router)
 
 app.get("/", (req, res) => {
-    res.json({
-        msg: "Welcome to ExpressJs"
-    })
+    res.sendFile(path.join(__dirname + "/index.html"))
 });
 
 app.get("/location", (req, res) => {
