@@ -15,15 +15,15 @@ const PORT = process.env.PORT || 5000;
 const mongourl = "mongodb+srv://test:test123@cluster0.wy6xk.mongodb.net/Zomato?retryWrites=true&w=majority";
 let db;
 mongoose.connect(mongourl, {
-    useNewUrlParser : true,
+    useNewUrlParser: true,
 })
-// const connection = mongoose.connection;
-.then(data => {
-    console.log("Mongoose Connected...");
-})
-.catch(err => {
-    console.log("Connection failed...");
-})
+    // const connection = mongoose.connection;
+    .then(data => {
+        console.log("Mongoose Connected...");
+    })
+    .catch(err => {
+        console.log("Connection failed...");
+    })
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -37,6 +37,8 @@ app.get("/", (req, res) => {
         msg: "Welcome to ExpressJs"
     })
 });
+
+
 
 app.get("/location", (req, res) => {
     db.collection("location").find().toArray((err, result) => {
@@ -190,7 +192,12 @@ app.post("/placeOrder", (req, res) => {
 app.post("/menuItem", (req, res) => {
     // console.log(req.body);
     db.collection('menu').find({ menu_id: { $in: req.body } }).toArray((err, result) => {
-        if (err) throw err;
+        if (err) {
+            res.json({
+                msg : "Something went wrong",
+                result : err
+            })
+        };
         res.json(result);
     })
 });
@@ -211,7 +218,8 @@ app.put('/updateOrder/:id', (req, res) => {
 
     db.collection("orders").updateOne(
         { _id: orderId },
-        {$set: {
+        {
+            $set: {
                 "status": status,
                 "bank_name": req.body.bank_name,
                 "bank_status": req.body.bank_status
@@ -223,19 +231,19 @@ app.put('/updateOrder/:id', (req, res) => {
     )
 })
 
-app.post('/register', (req,res) => {
-    db.collection("users").insertOne(req.body, (err,result) => {
+app.post('/register', (req, res) => {
+    db.collection("users").insertOne(req.body, (err, result) => {
         if (err) throw err;
         res.json(result)
     })
 })
 
-app.post('/login', (req,res) => {
-    let name = req.body.name 
+app.post('/login', (req, res) => {
+    let name = req.body.name
     let email = req.body.email
     console.log(email);
-    
-    db.collection("users").findOne({name : name, email : email}).toArray((err,result) => {
+
+    db.collection("users").findOne({ name: name, email: email }).toArray((err, result) => {
         if (err) throw err;
         res.json(result);
     })
