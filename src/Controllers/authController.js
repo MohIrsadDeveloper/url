@@ -62,7 +62,7 @@ const userInfo = (req,res) => {
             }
             else {
                 UserModel.findById(user.id, (err,result) => {
-                    res.json(result+ "ok")
+                    res.json(result)
                 })
             }
         })
