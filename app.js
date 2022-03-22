@@ -211,22 +211,19 @@ app.delete('/deleteOrder', (req, res) => {
 })
 
 // Update Order
-app.put('/updateOrder/:id', (req, res) => {
-    let orderId = mongo.ObjectId(req.params.id);
-    let status = req.query.status ? req.query.status : 'Pending';
-    // console.log(status);
+app.patch('/updateOrder/:id', (req, res) => {
+    let userOrderId = Number(req.params.id);
 
     db.collection("orders").updateOne(
-        { _id: orderId },
-        {
-            $set: {
-                "status": status,
+        { orderId: userOrderId },
+        {$set: {
+                "status": req.body.status,
+                "date": req.body.date,
                 "bank_name": req.body.bank_name,
-                "bank_status": req.body.bank_status
             }
         }, (err, result) => {
             if (err) throw err;
-            res.json(`Status Updated to ${status}`);
+            res.json(`Status Updated Successfully`);
         }
     )
 })
